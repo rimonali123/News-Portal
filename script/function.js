@@ -5,7 +5,7 @@ const categories = async () => {
     const category = document.getElementById("category-container");
     data.data.news_category.forEach((item) => {
         const div = document.createElement('div');
-        div.innerHTML = `<button class="btn-ghost p-2 rounded-lg">${item.category_name}</button>`;
+        div.innerHTML = `<button onclick="loadNews('${item.category_id}')" class="btn-ghost p-2 rounded-lg">${item.category_name}</button>`;
         category.appendChild(div)
     })
 }
@@ -13,11 +13,16 @@ const categories = async () => {
 
 
 
-const loadNews = async () => {
-    const res = await fetch("https://openapi.programming-hero.com/api/news/category/01");
+
+const loadNews = async (catID) => {
+   const loadingSpinner=  document.getElementById("spinner");
+   loadingSpinner.style.display = "block";
+    const res = await fetch(`https://openapi.programming-hero.com/api/news/category/${catID}`);
     const data = await res.json();
     const cardNews = document.getElementById("card-container");
+    cardNews.innerHTML= '';
     data.data.forEach((item) => {
+        loadingSpinner.style.display = "none";
         const div = document.createElement("div");
         div.innerHTML = `<div class="lg:hero bg-base-300 rounded-lg">
         <div class="hero-content flex-col lg:flex-row">
@@ -63,9 +68,6 @@ const loadNews = async () => {
 }
 
 
-
-
-
-loadNews()
+loadNews("08")
 
 categories()
